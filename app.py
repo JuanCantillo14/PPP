@@ -2,6 +2,7 @@ from paciente import*
 from simple_colors import *
 import json
 import pprint
+from conexion import *
 
 
 
@@ -83,7 +84,7 @@ Seleccione una opción: """))
                                 elif r==6:
                                     rhs="AB-"
                                 elif r==7:
-                                    rh="O+"
+                                    rhs="O+"
                                 elif r==8:
                                     rhs="O-"
                             else:
@@ -177,31 +178,36 @@ Seleccione una opción: """))
                         with open ("pacientes.json","w") as p:
                             json.dump(x,p)
                             
-                    case 2:
-                        id=input("Digite el numero de documento: ")
-                        
-                        with open('pacientes.json','r')as p:
-                            pacs=p.readlines()
                             
-                            for linea in pacs:
-                                if id in linea:
-                                    pac=linea.split(",")
-                                    n=pac[0]
-                                    a=pac[1]
-                                    g=pac[2]
-                                    rh=pac[3]
-                                    correo=pac[4]
-                                    telefono=pac[5]
-                                    tipodoc=pac[6]
-                                    fecha_nacimiento=pac[8]
-                                    tipo_poblacion=pac[9]
-                                    ocupacion=pac[10]
-                                    eps=pac[11]
-                                    regimen=pac[12]
-                                    
-                                    
-                                    print(f"Nombres:{n}\nApellidos:{a}\nGenero:{g}\nRH:{rh}\nCorreo:{correo}\nTelefono:{telefono}\nTipo Documento:{tipodoc}\nFecha Nacimiento:{fecha_nacimiento}\nTipo Poblacion:{tipo_poblacion}\nOcupacion:{ocupacion}\nEPS:{eps}\nRegimen:{regimen}")
-                                    
+                        with open ("pacientes.json") as f:
+                            data=json.load(f)
+                            
+                            
+                        pac.insert_one(data)
+                            
+                        
+                            
+                    case 2:
+                        id=int(input("Digite el numero de documento: "))
+                        
+                        cursor=pac.find({"Nro Documento":id},{'Nombre':1,'Apellidos':1,'Sexo':1,'RH':1,'Correo':1,'Telefono':1,'Fecha de Nacimiento':1,'Tipo Población':1,'Ocupación':1,'EPS':1,'Regimen':1})
+                        
+                        # print("..........",cursor)
+                        
+                        for detalle in cursor:
+                            
+                            print(f'Nombre: {detalle["Nombre"]}')
+                            print(f'Apellidos: {detalle["Apellidos"]}')
+                            print(f'Genero: {detalle["Sexo"]}')
+                            print(f'RH: {detalle["RH"]}')
+                            print(f'Correo: {detalle["Correo"]}')
+                            print(f'Telefono: {detalle["Telefono"]}')
+                            print(f'Fecha de Nacimiento: {detalle["Fecha de Nacimiento"]}')
+                            print(f'Tipo de Población: {detalle["Tipo Población"]}')
+                            print(f'Ocupacion: {detalle["Ocupación"]}')
+                            print(f'EPS: {detalle["EPS"]}')
+                            print(f'Regimen: {detalle["Regimen"]}')
+                            
                     case 3:  
                         
                         consultarpacientes=pac.find({},{"Nombre":1,"Nro Documento":1,"Sexo":1})
@@ -227,6 +233,7 @@ Seleccione una opción: """))
                                     while selreg1!=3:
                                         match selreg1:
                                             case 1:
+                                                pass
         case 2:
             while selh!=3:
                 selh2=0
